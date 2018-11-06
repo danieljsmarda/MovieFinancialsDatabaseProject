@@ -1,0 +1,43 @@
+explain select tb.title_id, tb.primary_title from title_basics tb join title_genres tg on tb.title_id = tg.title_id
+where tb.start_year = 2013 and UPPER(tb.primary_title) = 'ELYSIUM';
+QUERY PLAN                                              
+------------------------------------------------------------------------------------------------------
+ Nested Loop  (cost=0.99..19283.34 rows=1647 width=30)
+   ->  Index Scan using year_title_idx on title_basics tb  (cost=0.56..3671.70 rows=1124 width=30)
+         Index Cond: ((start_year = 2013) AND (upper((primary_title)::text) = 'ELYSIUM'::text))
+   ->  Index Only Scan using title_genres_pkey on title_genres tg  (cost=0.43..13.86 rows=3 width=10)
+         Index Cond: (title_id = (tb.title_id)::bpchar)
+(5 rows)
+
+
+
+
+
+explain select tb.title_id, tb.primary_title, tb,title_type from title_basics tb join title_genres tg on tb.title_id = tg.title_id
+where tb.start_year = 2013 and UPPER(tb.primary_title) = 'ELYSIUM'
+and tb.title_type <> 'tvEpisode';
+                                              QUERY PLAN                                               
+--------------------------------------------------------------------------------------------------------
+ Nested Loop  (cost=0.86..6539.88 rows=548 width=133)
+   ->  Index Scan using year_title_type_idx on title_basics tb  (cost=0.43..1233.73 rows=374 width=133)
+         Index Cond: ((start_year = 2013) AND (upper((primary_title)::text) = 'ELYSIUM'::text))
+   ->  Index Only Scan using title_genres_pkey on title_genres tg  (cost=0.43..14.16 rows=3 width=10)
+         Index Cond: (title_id = (tb.title_id)::bpchar)
+(5 rows)
+
+
+
+
+
+explain select tb.title_id, tb.primary_title from title_basics tb join title_genres tg on tb.title_id = tg.title_id
+where tb.start_year = 2016 and UPPER(tb.primary_title) = 'ENTER THE FAUN'
+and tg.genre = 'comedy';
+                                                 QUERY PLAN                                               
+-------------------------------------------------------------------------------------------------------
+ Nested Loop  (cost=0.99..4220.65 rows=1 width=30)
+   Join Filter: ((tb.title_id)::bpchar = tg.title_id)
+   ->  Index Scan using genre_idx on title_genres tg  (cost=0.43..8.45 rows=1 width=10)
+         Index Cond: ((genre)::text = 'comedy'::text)
+   ->  Index Scan using year_title_idx on title_basics tb  (cost=0.56..4196.12 rows=1287 width=30)
+         Index Cond: ((start_year = 2016) AND (upper((primary_title)::text) = 'ENTER THE FAUN'::text))
+(6 rows)
