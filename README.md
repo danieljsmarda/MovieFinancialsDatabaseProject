@@ -1,4 +1,4 @@
-# CS 327E Elements of Databases - The University of Texas at Austin
+# Elements of Databases - The University of Texas at Austin
 Elements of Databases Fall 2017 Coursework, namely PySpark scripts, SQL queries, and analytics graphics. This course primarily focused on the theory and implementation of relational databases with an introduction to big data processing using Apache Spark. The instructions for each assignment are in the folders for the respective assignments.
 
 ## Assignment Workflow
